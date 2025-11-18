@@ -7,6 +7,7 @@
 #define BLOCKS_PER_LINE 20
 #define BLOCKS_COL 5
 #define INVENTORY_ITEMS 4
+#define DEBUG_INFO 1
 
 const int WIDTH = 800;
 const int HEIGHT = 450;
@@ -31,6 +32,7 @@ static void drawGame();
 static void drawInv();
 static void updateGame();
 static void duGame();
+static void drawDebugInfo();
 
 static Places place[BLOCKS_COL][BLOCKS_PER_LINE] = {0};
 static Inventory inventory[INVENTORY_ITEMS][1] = {0};
@@ -44,6 +46,9 @@ int main() {
   initGame();
   while (!WindowShouldClose()) {
     duGame();
+    if (DEBUG_INFO == 1) {
+      drawDebugInfo();
+    }
   }
   return 0;
 }
@@ -145,6 +150,10 @@ void drawInv() {
                     invSize.x / 2, invSize.y / 2, clrSelect);
     }
   }
+}
+
+void drawDebugInfo() {
+  DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 30, BLACK);
 }
 
 void duGame() {
