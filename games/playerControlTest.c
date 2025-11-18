@@ -1,8 +1,11 @@
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <rlgl.h>
 #include <stdlib.h>
+#include <time.h>
 
+#define GLSL_VERSION 330
 #define DEBUG 1
 #define MAX_BALL_COUNT 20
 
@@ -37,10 +40,24 @@ static Ball ball[MAX_BALL_COUNT] = {0};
 static Camera2D cmr;
 static Vector2 worldMouse;
 
+static Shader shader;
+
 int main() {
+  srand(time(NULL));
   SetTraceLogLevel(LOG_DEBUG);
   InitWindow(WIDTH, HEIGHT, "Player control");
   initGame();
+
+  shader = LoadShader(0, TextFormat("shader.frag", GLSL_VERSION));
+  int objectColorLoc = GetShaderLocation(shader, "objectColor");
+  int lightColorLoc = GetShaderLocation(shader, "lightColor");
+
+  Vector3 objColor = {1.0f, 1.0f, 1.0f};
+  Vector3 lightColor = {1.0f, 1.0f, 0.5f};
+
+  SetShaderValue(shader, objectColorLoc, &objColor, SHADER_UNIFORM_VEC3);
+  SetShaderValue(shader, lightColorLoc, &lightColor, SHADER_UNIFORM_VEC3);
+
   while (!WindowShouldClose()) {
     drawupdateGame();
   }
@@ -52,7 +69,7 @@ void initGame() {
   plr.speed = plrSpeed;
   for (int i = 0; i < MAX_BALL_COUNT; i++) {
     ball[i].position =
-        (Vector2){rand() % (2001 - 1000), rand() % (2001 - 1000)};
+        (Vector2){rand() % (6001 - 5000), rand() % (6001 - 5000)};
     ball[i].radius = rand() % (200 - 50 + 1) + 50;
     ball[i].color = colorPicker[rand() % 5];
   }
@@ -64,13 +81,18 @@ void drawGame() {
   BeginDrawing();
   BeginMode2D(cmr);
   ClearBackground(RAYWHITE);
-
   // draw balls
-  for (int i = 0; i < MAX_BALL_COUNT; i++) {
-    DrawCircle(ball[i].position.x, ball[i].position.y, ball[i].radius,
-               ball[i].color);
-  }
+  // for (int i = 0; i < MAX_BALL_COUNT; i++) {
+  //   DrawCircle(ball[i].position.x, ball[i].position.y, ball[i].radius,
+  //              ball[i].color);
+  // }
+  BeginShaderMode(shader);
+  DrawCircle(ball[5].position.x, ball[5].position.y, ball[5].radius,
+             ball[5].color);
+  EndShaderMode();
 
+  DrawCircle(ball[6].position.x, ball[6].position.y, ball[5].radius,
+             ball[5].color);
   // draw player
   Vector2 v1 = (Vector2){plr.position.x + sinf(plr.rotation * DEG2RAD) * (30),
                          plr.position.y - cosf(plr.rotation * DEG2RAD) * (30)};
