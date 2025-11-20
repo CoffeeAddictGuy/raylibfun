@@ -53,7 +53,7 @@ static Ball ball[MAX_BALL_COUNT] = {0};
 static Bullet bullet[MAX_BULLET_COUNT] = {0};
 static Camera2D cmr;
 static Vector2 worldMouse;
-
+static bool testBall = false;
 static Shader shader;
 
 int main() {
@@ -119,11 +119,23 @@ void drawGame() {
   //   DrawCircle(ball[i].position.x, ball[i].position.y, ball[i].radius,
   //              ball[i].color);
   // }
-  BeginShaderMode(shader);
-  DrawCircle(ball[5].position.x, ball[5].position.y, ball[5].radius,
-             ball[5].color);
-  EndShaderMode();
-
+  if (ball[5].position.x + ball[5].radius > cmr.target.x - ((float)WIDTH / 4) &&
+      ball[5].position.x - ball[5].radius < cmr.target.x + ((float)WIDTH / 4) &&
+      ball[5].position.y - ball[5].radius <
+          cmr.target.y + ((float)HEIGHT / 4) &&
+      ball[5].position.y + ball[5].radius >
+          cmr.target.y - ((float)HEIGHT / 4)) {
+    BeginShaderMode(shader);
+    DrawCircle(ball[5].position.x, ball[5].position.y, ball[5].radius,
+               ball[5].color);
+    EndShaderMode();
+  }
+  if (testBall) {
+    BeginShaderMode(shader);
+    DrawCircle(ball[5].position.x, ball[5].position.y, ball[5].radius,
+               ball[5].color);
+    EndShaderMode();
+  }
   DrawCircle(ball[6].position.x, ball[6].position.y, ball[6].radius,
              ball[6].color);
   // draw player
@@ -156,7 +168,8 @@ void drawGame() {
 }
 
 void updateGame() {
-
+  if (IsKeyPressed(KEY_P))
+    testBall = !testBall;
   // Player speed
   if (IsKeyDown(KEY_LEFT_SHIFT))
     plr.speed = plrRushSpeed;
@@ -247,6 +260,12 @@ void drawupdateGame() {
 
 void drawDebug() {
   DrawLineV(plr.position, worldMouse, BLACK);
+  DrawRectangleLines(plr.position.x - ((float)WIDTH / 4),
+                     plr.position.y - ((float)HEIGHT / 4), WIDTH / 2,
+                     HEIGHT / 2, GRAY);
+}
+
+void printDebug() {
   TraceLog(LOG_DEBUG, "Mouse pos:\nx:%f\ny:%f\n", GetMousePosition().x,
            GetMousePosition().y);
   TraceLog(LOG_DEBUG, "Player pos:\nx:%f\ny:%f\nPlayer rotation:\n%f",
