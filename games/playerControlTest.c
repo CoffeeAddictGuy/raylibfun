@@ -11,8 +11,8 @@
 #define MAX_BALL_COUNT 20
 #define MAX_BULLET_COUNT 10
 
-const int WIDTH = 1920;
-const int HEIGHT = 1080;
+int WIDTH = 1920;
+int HEIGHT = 1080;
 const Color colorPicker[5] = {BLACK, GREEN, YELLOW, BLUE, PURPLE};
 const int plrSpeed = 50;
 const int plrRushSpeed = 150;
@@ -60,6 +60,7 @@ int main() {
   srand(time(NULL));
   SetTraceLogLevel(LOG_DEBUG);
   InitWindow(WIDTH, HEIGHT, "Player control");
+  SetWindowState(FLAG_WINDOW_RESIZABLE);
   // SetTargetFPS(30);
   initGame();
 
@@ -251,6 +252,11 @@ void updateGame() {
   if (plr.rotation > 360 || plr.rotation < -360)
     plr.rotation = 0;
   LookAt();
+
+  if (IsWindowResized()) {
+    WIDTH = GetScreenWidth();
+    HEIGHT = GetScreenHeight();
+  }
 }
 
 void drawupdateGame() {
