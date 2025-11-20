@@ -44,6 +44,7 @@ static void drawGame();
 static void updateGame();
 static void drawupdateGame();
 static void drawDebug();
+static void printDebug();
 
 static void LookAt();
 
@@ -142,8 +143,10 @@ void drawGame() {
   }
 
   // draw debug
-  if (DEBUG)
+  if (DEBUG) {
     drawDebug();
+    printDebug();
+  }
 
   EndMode2D();
   if (DEBUG)
