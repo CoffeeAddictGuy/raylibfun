@@ -238,7 +238,7 @@ void updateGame() {
   cmr.target = (Vector2){plr.position.x, plr.position.y};
   cmr.offset = (Vector2){(float)WIDTH / 2, (float)HEIGHT / 2};
 
-  // Camera zoom in/out by mouse wheel
+  // // Camera zoom in/out by mouse wheel
   cmr.zoom += (float)GetMouseWheelMove() * 0.1f;
   if (cmr.zoom > 5.f)
     cmr.zoom = 3.f;
