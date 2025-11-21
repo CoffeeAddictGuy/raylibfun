@@ -106,6 +106,12 @@ void inputPlayer() {
   if (IsKeyDown(KEY_A)) {
     playerMoveX(-GetFrameTime() * player.speed);
   }
+  if (DEBUG && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    TraceLog(LOG_DEBUG, "Mouse cord:(%f,%f)", GetMousePosition());
+    player.position = GetMousePosition();
+    player.collider.x = GetMousePosition().x - (player.size.x / 10);
+    player.collider.y = GetMousePosition().y - (player.size.y / 10);
+  }
 }
 
 void playerMoveX(float dX) {
@@ -130,4 +136,6 @@ void drawDebug() {
   // Player collider
   DrawRectangleLines(player.collider.x, player.collider.y,
                      player.collider.width, player.collider.height, GRAY);
+  TraceLog(LOG_DEBUG, "Player:\nx-%f\ny-%f", player.position.x,
+           player.position.y);
 }
