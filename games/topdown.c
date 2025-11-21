@@ -1,7 +1,6 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 #define ROOMWIDTH 20
 #define ROOMHEIGHT 20
@@ -40,6 +39,8 @@ static void drawupdateGame();
 
 static void initPlayer();
 static void drawPlayer();
+static void playerMoveX(float dX);
+static void playerMoveY(float dY);
 static void inputPlayer();
 static void drawDebug();
 
@@ -65,12 +66,7 @@ void drawGame() {
   EndDrawing();
 }
 
-void updateGame() {
-  inputPlayer();
-  if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-    TraceLog(LOG_DEBUG, "Collider check");
-  }
-}
+void updateGame() { inputPlayer(); }
 
 void drawupdateGame() {
   drawGame();
@@ -99,36 +95,34 @@ void inputPlayer() {
   else
     player.speed = playerNormalSpeed;
   if (IsKeyDown(KEY_W)) {
-    player.position.y -= GetFrameTime() * player.speed;
-    player.collider.y = player.position.y - (player.size.x / 10);
-    if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-      player.position.y += GetFrameTime() * player.speed;
-      player.collider.y = player.position.y - (player.size.x / 10);
-    }
+    playerMoveY(-GetFrameTime() * player.speed);
   }
   if (IsKeyDown(KEY_S)) {
-    player.position.y += GetFrameTime() * player.speed;
-    player.collider.y = player.position.y - (player.size.x / 10);
-    if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-      player.position.y -= GetFrameTime() * player.speed;
-      player.collider.y = player.position.y - (player.size.x / 10);
-    }
+    playerMoveY(GetFrameTime() * player.speed);
   }
   if (IsKeyDown(KEY_D)) {
-    player.position.x += GetFrameTime() * player.speed;
-    player.collider.x = player.position.x - (player.size.x / 10);
-    if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-      player.position.x -= GetFrameTime() * player.speed;
-      player.collider.x = player.position.x - (player.size.x / 10);
-    }
+    playerMoveX(GetFrameTime() * player.speed);
   }
   if (IsKeyDown(KEY_A)) {
+    playerMoveX(-GetFrameTime() * player.speed);
+  }
+}
+
+void playerMoveX(float dX) {
+  player.position.x += dX;
+  player.collider.x = player.position.x - (player.size.x / 10);
+  if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
     player.position.x -= GetFrameTime() * player.speed;
     player.collider.x = player.position.x - (player.size.x / 10);
-    if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-      player.position.x += GetFrameTime() * player.speed;
-      player.collider.x = player.position.x - (player.size.x / 10);
-    }
+  }
+}
+
+void playerMoveY(float dY) {
+  player.position.y += dY;
+  player.collider.y = player.position.y - (player.size.y / 10);
+  if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
+    player.position.y -= GetFrameTime() * player.speed;
+    player.collider.y = player.position.y - (player.size.y / 10);
   }
 }
 
