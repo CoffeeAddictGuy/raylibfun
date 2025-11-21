@@ -118,7 +118,12 @@ void playerMoveX(float dX) {
   player.position.x += dX;
   player.collider.x = player.position.x - (player.size.x / 10);
   if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-    player.position.x -= GetFrameTime() * player.speed;
+    player.position.x -= dX;
+    player.collider.x = player.position.x - (player.size.x / 10);
+  }
+  if (player.position.x >= width - player.size.x - 5 ||
+      player.position.x <= 0 + 5) {
+    player.position.x -= dX;
     player.collider.x = player.position.x - (player.size.x / 10);
   }
 }
@@ -127,7 +132,12 @@ void playerMoveY(float dY) {
   player.position.y += dY;
   player.collider.y = player.position.y - (player.size.y / 10);
   if (CheckCollisionRecs(player.collider, (Rectangle){200, 300, 100, 50})) {
-    player.position.y -= GetFrameTime() * player.speed;
+    player.position.y -= dY;
+    player.collider.y = player.position.y - (player.size.y / 10);
+  }
+  if (player.position.y >= height - player.size.y - 5 ||
+      player.position.y < 0 + 5) {
+    player.position.y -= dY;
     player.collider.y = player.position.y - (player.size.y / 10);
   }
 }
