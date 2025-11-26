@@ -55,6 +55,7 @@ static Camera2D cmr;
 static Vector2 worldMouse;
 static bool testBall = false;
 static Shader shader;
+static Font font;
 
 int main() {
   srand(time(NULL));
@@ -109,6 +110,19 @@ void initGame() {
   // Camera
   cmr.zoom = 1;
   cmr.target = plr.position;
+
+  // Font
+  int codepoints[384];
+  int count = 0;
+  // ASCII
+  for (int cp = 0x20; cp < 0x7E; cp++)
+    codepoints[count++] = cp;
+  // Cir
+  for (int cp = 0x0400; cp < 0x04FF; cp++)
+    codepoints[count++] = cp;
+
+  font = LoadFontEx("resources/ScienceGothic.ttf", 48, codepoints, count);
+  SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
 }
 
 void drawGame() {
@@ -265,6 +279,8 @@ void drawupdateGame() {
 }
 
 void drawDebug() {
+  DrawTextEx(font, "Привет, мир! Кириллица работает. And English too! ^_^",
+             (Vector2){20, 20}, 48, 2, BLACK);
   DrawLineV(plr.position, worldMouse, BLACK);
   DrawRectangleLines(plr.position.x - ((float)WIDTH / 4),
                      plr.position.y - ((float)HEIGHT / 4), WIDTH / 2,
