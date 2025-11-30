@@ -170,10 +170,8 @@ void gameInput() {
     app.position.y += GetMouseDelta().y;
     for (int i = 0; i < MAX_COLOMN; i++) {
       for (int j = 0; j < MAX_ROW; j++) {
-        pixels[i][j] = (Pixel){(Vector2){app.position.x + j * 15 + 30,
-                                         app.position.y + i * 15 + 30},
-                               (Vector2){15, 15},
-                               ((i + j) % 2 == 1) ? LIGHTGRAY : GRAY, false};
+        pixels[i][j].position = (Vector2){app.position.x + j * 15 + 30,
+                                          app.position.y + i * 15 + 30};
       }
     }
   }
