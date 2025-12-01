@@ -121,7 +121,7 @@ void gameInit() {
   for (int i = 0; i < MAX_COLOMN; i++) {
     for (int j = 0; j < MAX_ROW; j++) {
       pixels[i][j] = (Pixel){
-          (Vector2){app.position.x + j * 15 + 30, app.position.y + i * 15 + 30},
+          (Vector2){app.position.x + j * 15 + 15, app.position.y + i * 15 + 60},
           (Vector2){15, 15}, ((i + j) % 2 == 1) ? LIGHTGRAY : GRAY, false,
           false};
     }
@@ -170,8 +170,8 @@ void gameInput() {
     app.position.y += GetMouseDelta().y;
     for (int i = 0; i < MAX_COLOMN; i++) {
       for (int j = 0; j < MAX_ROW; j++) {
-        pixels[i][j].position = (Vector2){app.position.x + j * 15 + 30,
-                                          app.position.y + i * 15 + 30};
+        pixels[i][j].position = (Vector2){app.position.x + j * 15 + 15,
+                                          app.position.y + i * 15 + 60};
       }
     }
   }
@@ -181,7 +181,6 @@ void gameInput() {
           mouseCord.x <= pixels[i][j].position.x + pixels[i][j].size.x &&
           mouseCord.y >= pixels[i][j].position.y &&
           mouseCord.y <= pixels[i][j].position.y + pixels[i][j].size.y) {
-        TraceLog(LOG_DEBUG, "TEST #%d%d", i, j);
         pixels[i][j].mSelect = true;
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !pixels[i][j].colored) {
           pixels[i][j].color = BLACK;
