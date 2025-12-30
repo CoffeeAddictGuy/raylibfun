@@ -101,30 +101,58 @@ static void game_init() {
       }
 
       if (is_passable) {
-
         if (i + 1 < BLOCK_LINE) {
           bool neighbor_passable =
               (blocks[i + 1][j].type == ROAD ||
                blocks[i + 1][j].type == START || blocks[i + 1][j].type == END);
-          graph_add_edge(graph, id, id + BLOCK_LINE);
+          if (neighbor_passable)
+            graph_add_edge(graph, id, id + BLOCK_LINE);
         }
         if (i - 1 < BLOCK_LINE) {
           bool neighbor_passable =
               (blocks[i - 1][j].type == ROAD ||
                blocks[i - 1][j].type == START || blocks[i - 1][j].type == END);
-          graph_add_edge(graph, id, id - BLOCK_LINE);
+          if (neighbor_passable)
+            graph_add_edge(graph, id, id - BLOCK_LINE);
         }
         if (j + 1 < BLOCK_PER_LINE) {
           bool neighbor_passable =
               (blocks[i][j + 1].type == ROAD ||
                blocks[i][j + 1].type == START || blocks[i][j + 1].type == END);
-          graph_add_edge(graph, id, id + 1);
+          if (neighbor_passable)
+            graph_add_edge(graph, id, id + 1);
         }
         if (j - 1 < BLOCK_PER_LINE) {
           bool neighbor_passable =
               (blocks[i][j - 1].type == ROAD ||
                blocks[i][j - 1].type == START || blocks[i][j - 1].type == END);
-          graph_add_edge(graph, id, id - 1);
+          if (neighbor_passable)
+            graph_add_edge(graph, id, id - 1);
+        }
+        // dia
+        if (i + 1 < BLOCK_LINE && j + 1 < BLOCK_LINE) {
+          bool neighbor_passable = (blocks[i + 1][j + 1].type == ROAD ||
+                                    blocks[i + 1][j + 1].type == START ||
+                                    blocks[i + 1][j + 1].type == END);
+          graph_add_edge(graph, id, id + BLOCK_LINE + 1);
+        }
+        if (i + 1 < BLOCK_LINE && j - 1 < BLOCK_LINE) {
+          bool neighbor_passable = (blocks[i + 1][j - 1].type == ROAD ||
+                                    blocks[i + 1][j - 1].type == START ||
+                                    blocks[i + 1][j - 1].type == END);
+          graph_add_edge(graph, id, id + BLOCK_LINE - 1);
+        }
+        if (i - 1 < BLOCK_LINE && j - 1 < BLOCK_LINE) {
+          bool neighbor_passable = (blocks[i - 1][j - 1].type == ROAD ||
+                                    blocks[i - 1][j - 1].type == START ||
+                                    blocks[i - 1][j - 1].type == END);
+          graph_add_edge(graph, id, id - BLOCK_LINE - 1);
+        }
+        if (i - 1 < BLOCK_LINE && j + 1 < BLOCK_LINE) {
+          bool neighbor_passable = (blocks[i - 1][j + 1].type == ROAD ||
+                                    blocks[i - 1][j + 1].type == START ||
+                                    blocks[i - 1][j + 1].type == END);
+          graph_add_edge(graph, id, id - BLOCK_LINE + 1);
         }
       }
     }
@@ -162,23 +190,11 @@ static void game_draw() {
         for (int i = 0; i < path.path_length - 1; i++) {
           Vector2 from = id_to_pos(path.path[i]);
           Vector2 to = id_to_pos(path.path[i + 1]);
-          Vector2 from_center = {from.x + placeSize.x / 2 - 10,
-                                 from.y + placeSize.y / 2 - 10};
-          Vector2 to_center = {to.x + placeSize.x / 2 - 10,
-                               to.y + placeSize.y / 2 - 10};
+          Vector2 from_center = {from.x + placeSize.x / 2,
+                                 from.y + placeSize.y / 2};
+          Vector2 to_center = {to.x + placeSize.x / 2, to.y + placeSize.y / 2};
           DrawLineV(from_center, to_center, BLUE);
           DrawCircleV(from_center, 5, RED);
-        }
-
-        for (int i = 0; i < path2.path_length - 1; i++) {
-          Vector2 from = id_to_pos(path2.path[i]);
-          Vector2 to = id_to_pos(path2.path[i + 1]);
-          Vector2 from_center = {from.x + placeSize.x / 2 + 10,
-                                 from.y + placeSize.y / 2 + 10};
-          Vector2 to_center = {to.x + placeSize.x / 2 + 10,
-                               to.y + placeSize.y / 2 + 10};
-          DrawLineV(from_center, to_center, GREEN);
-          DrawCircleV(from_center, 5, YELLOW);
         }
       }
     }
@@ -269,6 +285,39 @@ static void graph_rebuild() {
                blocks[i][j - 1].type == START || blocks[i][j - 1].type == END);
           if (neigh_passable) {
             graph_add_edge(graph, id, id - 1);
+          }
+        }
+
+        if (i + 1 < BLOCK_LINE && j + 1 < BLOCK_PER_LINE) {
+          bool neigh_passable = (blocks[i + 1][j + 1].type == ROAD ||
+                                 blocks[i + 1][j + 1].type == START ||
+                                 blocks[i + 1][j + 1].type == END);
+          if (neigh_passable) {
+            graph_add_edge(graph, id, id + BLOCK_LINE + 1);
+          }
+        }
+        if (i + 1 < BLOCK_LINE && j > 0) {
+          bool neigh_passable = (blocks[i + 1][j - 1].type == ROAD ||
+                                 blocks[i + 1][j - 1].type == START ||
+                                 blocks[i + 1][j - 1].type == END);
+          if (neigh_passable) {
+            graph_add_edge(graph, id, id + BLOCK_LINE - 1);
+          }
+        }
+        if (i > 0 && j > 0) {
+          bool neigh_passable = (blocks[i - 1][j - 1].type == ROAD ||
+                                 blocks[i - 1][j - 1].type == START ||
+                                 blocks[i - 1][j - 1].type == END);
+          if (neigh_passable) {
+            graph_add_edge(graph, id, id - BLOCK_LINE - 1);
+          }
+        }
+        if (i > 0 && j + 1 < BLOCK_PER_LINE) {
+          bool neigh_passable = (blocks[i - 1][j + 1].type == ROAD ||
+                                 blocks[i - 1][j + 1].type == START ||
+                                 blocks[i - 1][j + 1].type == END);
+          if (neigh_passable) {
+            graph_add_edge(graph, id, id - BLOCK_LINE + 1);
           }
         }
       }
