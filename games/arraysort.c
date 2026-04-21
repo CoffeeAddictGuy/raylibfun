@@ -116,12 +116,12 @@ void draw() {
 
     Vector2 start_element_pos =
         (Vector2){.x = start_cord + (main_array.element_width * i +
-                                     main_array.element_width / 2),
+                                     main_array.element_width / 2.0),
                   .y = WIDTH - 500};
 
     Vector2 end_element_pos =
         (Vector2){.x = start_cord + (main_array.element_width * i +
-                                     main_array.element_width / 2),
+                                     main_array.element_width / 2.0),
                   .y = start_element_pos.y - main_array.array[i].val};
     DrawLineEx(start_element_pos, end_element_pos, main_array.element_width,
                curr_color);
