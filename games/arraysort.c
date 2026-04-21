@@ -38,6 +38,7 @@ static Array main_array = {0};
 static Timer timer = {0};
 static bool swapped = true;
 static bool pause = true;
+static Sound swap_sound;
 
 void swap(int *a, int *b) {
   int t = *a;
@@ -79,6 +80,17 @@ void init() {
   TraceLog(LOG_DEBUG, "Main Array info:");
   TraceLog(LOG_DEBUG, "- Element count %d", main_array.size);
   TraceLog(LOG_DEBUG, "- Element width %d", main_array.element_width);
+}
+
+void init_audio() {
+  InitAudioDevice();
+  if (IsAudioDeviceReady()) {
+    TraceLog(LOG_DEBUG, "Audio device is ready!");
+  }
+  TraceLog(LOG_DEBUG, "Audio device master volume %f", GetMasterVolume());
+
+  SetMasterVolume(0.5);
+  swap_sound = LoadSound("drop_003.ogg");
 }
 
 void restart() {
@@ -148,6 +160,7 @@ void update() {
         main_array.array[main_array.active_element - 1].val) {
       swap(&main_array.array[main_array.active_element].val,
            &main_array.array[main_array.active_element - 1].val);
+      PlaySound(swap_sound);
     }
   } else {
     pause = true;
@@ -180,6 +193,7 @@ int main() {
   InitWindow(WIDTH, HEIGHT, "Sorter");
 
   init();
+  init_audio();
 
   while (!WindowShouldClose()) {
     if (!pause) {
@@ -189,5 +203,7 @@ int main() {
 
     input();
   }
+
+  CloseAudioDevice();
   return 0;
 }
