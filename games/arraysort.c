@@ -159,20 +159,6 @@ void update() {
   }
 }
 
-void final_check() {
-  main_array.array[main_array.active_element].is_active = false;
-
-  if (timer.start < timer.end &&
-      main_array.array[main_array.active_element].is_active) {
-    timer.start += GetFrameTime();
-    return;
-  } else {
-    timer.start = 0;
-    main_array.array[main_array.active_element].is_active = false;
-    main_array.active_element++;
-  }
-}
-
 void input() {
   if (IsKeyPressed(KEY_R)) {
     restart();
