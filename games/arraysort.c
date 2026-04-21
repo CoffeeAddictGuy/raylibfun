@@ -31,6 +31,7 @@ typedef struct Array {
   size_t size;
   size_t element_width;
   size_t active_element;
+  size_t limit;
 } Array;
 
 static Array main_array = {0};
@@ -65,6 +66,7 @@ void init() {
       (WIDTH - (PADDING * 2) - (main_array.size * GAP)) / main_array.size;
 
   main_array.active_element = 1;
+  main_array.limit = main_array.size;
 
   for (int i = 0; i < main_array.size; i++) {
     int new_value = rand() % (MAX_VALUE - MIN_VALUE + 1) + MIN_VALUE;
@@ -85,6 +87,7 @@ void restart() {
   main_array.element_width =
       (WIDTH - (PADDING * 2) - (main_array.size * GAP)) / main_array.size;
   main_array.active_element = 1;
+  main_array.limit = main_array.size;
 
   TraceLog(LOG_DEBUG, "Main Array info:");
   TraceLog(LOG_DEBUG, "- Element count %d", main_array.size);
@@ -150,8 +153,10 @@ void update() {
     pause = true;
   }
 
-  if (main_array.active_element == main_array.size - 1) {
+  if (main_array.active_element == main_array.size - 1 ||
+      main_array.active_element == main_array.limit - 1) {
     main_array.active_element = 0;
+    main_array.limit--;
   }
 
   if (!main_array.array[main_array.active_element].is_active) {
