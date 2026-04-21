@@ -56,7 +56,7 @@ bool array_check(Element *array, size_t size) {
 }
 
 void init() {
-  timer = (Timer){.start = 0.f, .end = 0.05f};
+  timer = (Timer){.start = 0.f, .end = 0.00005f};
 
   srand(time(NULL));
 
