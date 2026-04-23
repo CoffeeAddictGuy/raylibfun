@@ -56,7 +56,7 @@ bool array_check(Element *array, size_t size) {
 }
 
 void init() {
-  timer = (Timer){.start = 0.f, .end = 0.00005f};
+  timer = (Timer){.start = 0.f, .end = 0.005f};
 
   srand(time(NULL));
 
@@ -122,11 +122,11 @@ void draw() {
   ClearBackground(BLACK);
   float start_cord = PADDING;
   for (int i = 0; i < main_array.size; i++) {
-    Color curr_color = YELLOW;
+    Color main_collector_color = YELLOW;
     if (main_array.array[i].is_active) {
-      curr_color = RED;
+      main_collector_color = RED;
     } else {
-      curr_color = YELLOW;
+      main_collector_color = YELLOW;
     }
 
     Vector2 start_element_pos =
@@ -139,7 +139,7 @@ void draw() {
                                      main_array.element_width / 2.0),
                   .y = start_element_pos.y - main_array.array[i].val};
     DrawLineEx(start_element_pos, end_element_pos, main_array.element_width,
-               curr_color);
+               main_collector_color);
     start_cord += GAP;
   }
   EndDrawing();
