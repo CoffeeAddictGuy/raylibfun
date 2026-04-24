@@ -2,3 +2,5 @@
 *.ttf
 *.o
 build/
+*.ogg
+*.out
